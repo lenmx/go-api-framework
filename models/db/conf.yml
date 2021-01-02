@@ -1,0 +1,38 @@
+kind: reverse
+name: database-name
+source:
+  database: mysql
+  conn_str: 'root:password@tcp(000.000.000.000:3306)/database-name'
+targets:
+  - type: codes
+    language: golang
+    output_dir: ./models
+    include_tables:
+#      - a
+#      - bn
+    exclude_tables:
+#      - c
+    table_mapper: same #snake/same/gonic
+    column_mapper: same #snake/same/gonic
+    table_prefix: ""
+    multiple_files: true
+    table_name: true
+    json_tag: true
+    json_tag_mapper: snake #snake/same/gonic
+    template: |
+      {{$reverseConfig := .ReverseConfig}}
+      package {{GenPkgname $reverseConfig}}
+      {{$ilen := len .Imports}}
+      {{if gt $ilen 0}}
+      import (
+        {{range .Imports}}"{{.}}"{{end}}
+      )
+      {{end}}
+      {{range .Tables}}
+      type {{TableMapper .Name}} struct {
+      {{$table := .}}
+      {{range .ColumnsSeq}}{{$col := $table.GetColumn .}}	{{ColumnMapper $col.Name}}	{{Type $col}} `{{Tag $table $col $reverseConfig}}`
+      {{end}}
+      }
+      {{end}}
+    #template_path: ./template/goxorm.tmpl

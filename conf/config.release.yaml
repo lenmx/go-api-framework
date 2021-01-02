@@ -1,0 +1,26 @@
+env: release                    # 开发模式, debug, release, test
+addr: :8888                   # HTTP绑定端口
+name: project-name             # API Server的名字
+url: http://127.0.0.1:8888    # pingServer函数请求的API服务器的ip:port
+maxPingCount: 10              # pingServer函数try的次数
+jwt:
+  secret: Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR489ndq0iBb6
+  leeway: 10s # nbf 余量时间（10秒）
+  exp: 168h # token 超时时间（7天）
+log:
+  level: debug
+  maxSize: 10         #每个日志文件保存的最大尺寸 单位：M
+  maxBackups: 10      #日志文件最多保存多少个备份
+  maxAge: 30          #文件最多保存多少天
+  compress: false     #是否压缩
+db:
+  name: database-name
+  addr: 000.000.000.000:3306
+  username: root
+  pass: password
+  dataSourceName: root:password@tcp(000.000.000.000:3306)/
+  slowLogTime: 3000ms       #慢日志记录阈值
+redis:
+  addr: 000.000.000.000:6379
+  pass: password
+  db: 0
