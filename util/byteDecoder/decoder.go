@@ -10,12 +10,12 @@ const (
 	GBK     = Charset("GBK")
 )
 
-func Decode(source []byte, targetCharset Charset) (result []byte) {
+func Decode(source []byte, targetCharset Charset) (result []byte, err error) {
 	switch targetCharset {
 	case GB18030:
-		result, _ = simplifiedchinese.GB18030.NewDecoder().Bytes(source)
+		result, err = simplifiedchinese.GB18030.NewDecoder().Bytes(source)
 	case GBK:
-		result, _ = simplifiedchinese.GBK.NewDecoder().Bytes(source)
+		result, err = simplifiedchinese.GBK.NewDecoder().Bytes(source)
 	case UTF8:
 		fallthrough
 	default:

@@ -17,11 +17,14 @@ import (
 	_ "project-name/docs"
 )
 
-func InitRoute(g *gin.Engine) {
+func InitRoute() (g *gin.Engine) {
+	g = gin.New()
+	gin.SetMode(config.G_config.Env)
+
 	UseMiddleware(g)
 	Load(g)
 
-	return
+	return g
 }
 
 func UseMiddleware(g *gin.Engine) {
@@ -55,12 +58,12 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) {
 				ID:       1,
 				Username: "larry",
 			}
-		 	token, err := token.Sign(context, *userContext, config.G_config.Jwt.Secret)
-		 	if err != nil{
-		 		panic(err)
-		    }
+			token, err := token.Sign(context, *userContext, config.G_config.Jwt.Secret)
+			if err != nil {
+				panic(err)
+			}
 
-		    handler.Response(context, nil, token)
+			handler.Response(context, nil, token)
 		})
 	}
 

@@ -2,8 +2,6 @@ package main
 
 import (
 	"errors"
-	"flag"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"project-name/config"
 	"project-name/pkg/xlogger"
@@ -13,42 +11,29 @@ import (
 	"time"
 )
 
-var env string
-
-func initArgs() {
-	flag.StringVar(&env, "env", "debug", "环境变量")
-	flag.Parse()
-}
-
 func initEnv() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
 func main() {
-	var (
-		err     error
-		gEngine *gin.Engine
-		addr    string
-	)
-
-
-	initArgs()
 	initEnv()
 
-	if err = config.InitConfig(env); err != nil {
+	config.InitArgs()
+
+	if err := config.InitConfig(config.Arg.Env, ""); err != nil {
 		panic(err)
 	}
+
 	xlogger.InitLogger()
+
 	defer xrecover.XRecover(nil)
 
 	//xredis.InitRedis()
-	//
+
 	//db.InitAdapter()
 
 	// gin init
-	gin.SetMode(config.G_config.Env)
-	gEngine = gin.New()
-	router.InitRoute(gEngine)
+	g := router.InitRoute()
 
 	// ping 服务器
 	go func() {
@@ -60,9 +45,9 @@ func main() {
 		xlogger.NormalLogger.Info("服务器ping接口成功响应")
 	}()
 
-	addr = config.G_config.Addr
+	addr := config.G_config.Addr
 	xlogger.NormalLogger.Infof("服务器监听地址: %s", addr)
-	if err = http.ListenAndServe(addr, gEngine); err != nil {
+	if err := http.ListenAndServe(addr, g); err != nil {
 		panic(err)
 	}
 }

@@ -57,12 +57,16 @@ type Config struct {
 
 var G_config *Config
 
-func InitConfig(env string) (err error) {
+func InitConfig(env string, path string) (err error) {
 	var (
 		conf Config
 	)
 
-	viper.AddConfigPath("conf")
+	if path == "" {
+		path = "conf"
+	}
+
+	viper.AddConfigPath(path)
 	viper.SetConfigName("config." + env)
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv()

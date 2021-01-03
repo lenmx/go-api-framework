@@ -68,7 +68,11 @@ func getIpInfoReal(ip string) (ipInfo *dto.GetIpInfoDto, err error) {
 	}
 
 	// 编码转换
-	respBody = byteDecoder.Decode(respBody, byteDecoder.GBK)
+	respBody, err = byteDecoder.Decode(respBody, byteDecoder.GBK)
+	if err != nil {
+		panic(err)
+	}
+	
 	err = json.Unmarshal(respBody, &ipInfo)
 	if err != nil {
 		panic(err)
