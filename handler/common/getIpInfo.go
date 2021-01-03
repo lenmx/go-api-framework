@@ -13,6 +13,14 @@ import (
 
 const baseUrl = "http://whois.pconline.com.cn/ipJson.jsp?ip=%s&json=true&level=2"
 
+// @Summary 获取ip归属地信息
+// @Description desc
+// @Tags common
+// @Accept json
+// @Produce json
+// @Param ip path string true "desc" #where_in:path/query/body
+// @Success 200 {object} dto.GetIpInfoDto ""
+// @Router /v1/common/ip/:ip [get] #method:get/post/put/delete
 func GetIpInfo(c *gin.Context) {
 	var (
 		ip        string

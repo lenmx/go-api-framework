@@ -11,6 +11,10 @@ import (
 	"project-name/router/middleware"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
+	_ "project-name/docs"
 )
 
 func InitRoute(g *gin.Engine) {
@@ -36,9 +40,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) {
 	g.NoRoute(func(c *gin.Context) {
 		c.String(http.StatusNotFound, "The incorrect API route.")
 	})
+	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	commonGroup := g.Group("v1/common")
-	commonGroup.Use(middleware.AuthMiddleware())
+	//commonGroup.Use(middleware.AuthMiddleware())
 	{
 		commonGroup.GET("/ip/:ip", common.GetIpInfo)
 	}
